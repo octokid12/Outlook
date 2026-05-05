@@ -23,7 +23,7 @@
     <Form xsi:type="ItemCompose">
       <DesktopSettings>
         <!-- Replace the URL below with your actual hosted URL -->
-        <SourceLocation DefaultValue="https://localhost:3000/index.html" />
+        <SourceLocation DefaultValue="https://octokid12.github.io/Outlook/index.html" />
       </DesktopSettings>
     </Form>
   </FormSettings>
