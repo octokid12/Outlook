@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Email Template</title>
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; padding: 20px; }
+        .container { display: flex; flex-direction: column; gap: 10px; }
+        input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        button { background-color: #0078d4; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #005a9e; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <b>Project Name/Reference:</b>
+        <input type="text" id="userInput" placeholder="Enter name here...">
+        <button id="insertBtn">Generate Email</button>
+    </div>
+
+    <script>
+        // Initialize the Office Add-in
+        Office.onReady((info) => {
+            if (info.host === Office.HostType.Outlook) {
+                document.getElementById("insertBtn").onclick = generateEmail;
+            }
+        });
+
+        function generateEmail() {
+            const customInput = document.getElementById("userInput").value;
+            
+            // Your prewritten email template
+            const emailBody = `
+                Hello,<br><br>
+                This is an automated update regarding <b>${customInput}</b>.<br>
+                Please review the attached documents and let us know your thoughts.<br><br>
+                Best,<br>
+                The Team
+            `;
+
+            // Update the Subject Line
+            Office.context.mailbox.item.subject.setAsync(`Update for ${customInput}`);
+
+            // Insert the Body text
+            Office.context.mailbox.item.body.setSelectedDataAsync(
+                emailBody,
+                { coercionType: Office.CoercionType.Html },
+                (result) => {
+                    if (result.status === Office.AsyncResultStatus.Succeeded) {
+                        console.log("Template inserted successfully.");
+                    }
+                }
+            );
+        }
+    </script>
+</body>
+</html>
