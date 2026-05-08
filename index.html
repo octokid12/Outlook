@@ -2,18 +2,36 @@
 <html>
 <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <title>Email Prompt Tool</title>
+    <!-- Office JavaScript API -->
     <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-    <script src="taskpane.js"></script>
     <style>
-        body { padding: 10px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        input { width: 100%; margin-bottom: 10px; padding: 5px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background-color: #0078d4; color: white; border: none; cursor: pointer; }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            padding: 15px; 
+            margin: 0; 
+        }
+        .container { display: flex; flex-direction: column; gap: 10px; }
+        input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        button { 
+            padding: 10px; 
+            background-color: #0078d4; 
+            color: white; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+        }
+        button:hover { background-color: #005a9e; }
     </style>
 </head>
 <body>
-    <label for="userInput">Enter your text?:</label>
-    <input type="text" id="userInput" placeholder="Type something here...">
-    <button id="insertBtn">Insert into Email.</button>
+    <div class="container">
+        <label>Enter text to add:</label>
+        <input type="text" id="userInput" placeholder="Type here...">
+        <button id="insertBtn">Insert Hello World</button>
+    </div>
+
+    <script src="taskpane.js"></script>
 </body>
 </html>
