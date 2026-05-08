@@ -2,36 +2,62 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <title>Email Prompt Tool</title>
-    <!-- Office JavaScript API -->
+    <!-- 1. The most important line: Loading the Office API -->
     <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    
     <style>
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            padding: 15px; 
-            margin: 0; 
-        }
-        .container { display: flex; flex-direction: column; gap: 10px; }
-        input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-        button { 
-            padding: 10px; 
-            background-color: #0078d4; 
-            color: white; 
-            border: none; 
-            border-radius: 4px; 
-            cursor: pointer; 
-        }
-        button:hover { background-color: #005a9e; }
+        body { font-family: 'Segoe UI', sans-serif; padding: 15px; }
+        input { width: 100%; padding: 8px; margin-bottom: 10px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #0078d4; color: white; border: none; cursor: pointer; }
+        #status { color: red; font-size: 12px; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <label>Enter text to add:</label>
-        <input type="text" id="userInput" placeholder="Type here...">
-        <button id="insertBtn">Insert Hello World is a gramatically correct sentence</button>
-    </div>
+    <input type="text" id="userInput" placeholder="Type your string here...">
+    <button id="insertBtn">Insert Text</button>
+    <div id="status"></div>
 
-    <script src="taskpane.js"></script>
+    <script>
+        const statusDiv = document.getElementById("status");
+
+        // 2. Wait for Office to initialize
+        Office.onReady(function (info) {
+            if (info.host === Office.Host.Outlook) {
+                statusDiv.innerText = "Outlook connection: READY";
+                statusDiv.style.color = "green";
+                
+                // 3. Attach the event listener ONLY after Office is ready
+                document.getElementById("insertBtn").onclick = insertText;
+            } else {
+                statusDiv.innerText = "Error: Not running inside Outlook.";
+            }
+        });
+
+        function insertText() {
+            const userString = document.getElementById("userInput").value;
+            const finalString = userString + " Hello World!";
+
+            // 4. Using the Office API to write to the email
+            // We use 'try' to catch the error you saw earlier
+            try {
+                Office.context.mailbox.item.body.setSelectedDataAsync(
+                    finalString,
+                    { coercionType: Office.CoercionType.Text },
+                    function (asyncResult) {
+                        if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+                            statusDiv.innerText = "Insert failed: " + asyncResult.error.message;
+                        } else {
+                            statusDiv.innerText = "Success!";
+                            document.getElementById("userInput").value = "";
+                        }
+                    }
+                );
+            } catch (err) {
+                statusDiv.innerText = "API Error: " + err.message;
+                console.error(err);
+            }
+        }
+    </script>
 </body>
 </html>
