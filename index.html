@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-    <input type="text" id="userInput" placeholder="Type your string here...">
+    <input type="text" id="userInput" placeholder="Reason for meeting cancellation...">
     <button id="insertBtn">Insert Text</button>
     <div id="status"></div>
 
@@ -36,7 +36,7 @@
 
         function insertText() {
             const userString = document.getElementById("userInput").value;
-            const finalString = userString + " Hello World!";
+            const finalString = "Dear [recipient]\n\nI am no longer available at the original decided meeting time, due to this reason: "+ userString + "\n[If rescheduled] I am available at a later time today idk what else goes on here but like ok\n\nBest regards,\nMs. D";
 
             // 4. Using the Office API to write to the email
             // We use 'try' to catch the error you saw earlier
