@@ -75,7 +75,7 @@
 </bt:Urls>
 <bt:ShortStrings>
 <bt:String id="GroupLabel" DefaultValue="Email Prompt Tool"/>
-<bt:String id="TaskpaneButton.Label" DefaultValue="Generate Email"/>
+<bt:String id="TaskpaneButton.Label" DefaultValue="Generate a FWEAKIN' Email"/>
 </bt:ShortStrings>
 <bt:LongStrings>
 <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Open the Email Prompt Tool to generate a templated email."/>
