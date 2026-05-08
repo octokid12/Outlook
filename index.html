@@ -2,57 +2,18 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>Email Template</title>
+    <title>Email Prompt Tool</title>
     <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <script src="taskpane.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; padding: 20px; }
-        .container { display: flex; flex-direction: column; gap: 10px; }
-        input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-        button { background-color: #0078d4; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; }
-        button:hover { background-color: #005a9e; }
+        body { padding: 10px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        input { width: 100%; margin-bottom: 10px; padding: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #0078d4; color: white; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <b>Project Name/Reference:</b>
-        <input type="text" id="userInput" placeholder="Enter name here...">
-        <button id="insertBtn">Generate Email</button>
-    </div>
-
-    <script>
-        // Initialize the Office Add-in
-        Office.onReady((info) => {
-            if (info.host === Office.HostType.Outlook) {
-                document.getElementById("insertBtn").onclick = generateEmail;
-            }
-        });
-
-        function generateEmail() {
-            const customInput = document.getElementById("userInput").value;
-            
-            // Your prewritten email template
-            const emailBody = `
-                Hello,<br><br>
-                This is an automated update regarding <b>${customInput}</b>.<br>
-                Please review the attached documents and let us know your thoughts.<br><br>
-                Best,<br>
-                The Team
-            `;
-
-            // Update the Subject Line
-            Office.context.mailbox.item.subject.setAsync(`Update for ${customInput}`);
-
-            // Insert the Body text
-            Office.context.mailbox.item.body.setSelectedDataAsync(
-                emailBody,
-                { coercionType: Office.CoercionType.Html },
-                (result) => {
-                    if (result.status === Office.AsyncResultStatus.Succeeded) {
-                        console.log("Template inserted successfully.");
-                    }
-                }
-            );
-        }
-    </script>
+    <label for="userInput">Enter your text:</label>
+    <input type="text" id="userInput" placeholder="Type something here...">
+    <button id="insertBtn">Insert into Email</button>
 </body>
 </html>
