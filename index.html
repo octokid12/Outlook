@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-    <input type="text" id="userInput" placeholder="Reason for meeting cancellation...">
+    <input type="text" id="userInput" placeholder="Reason for meet22222222ing cancellation...">
     <button id="insertBtn">Insert Text</button>
     <div id="status"></div>
 
@@ -36,7 +36,7 @@
 
         function insertText() {
             const userString = document.getElementById("userInput").value;
-            const finalString = "Dear [recipient]I am no longer available at the original decided meeting time, due to this reason: "+ userString;
+            const finalString = userString + "Dear [recipient]I am no longer available at the original decided meeting time, due to this reason: ";
 
             // 4. Using the Office API to write to the email
             // We use 'try' to catch the error you saw earlier
