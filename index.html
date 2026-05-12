@@ -22,63 +22,62 @@
 </head>
 <body>
     <div class="container">
-        <input type="text" id="userInput" placeholder="Recipient's name...">
-        <input type="text" id="userInput2" placeholder="Reason for cancellation...">
-        <button id="insertBtn">Insert Text</button>
+        <input type="text" id="userInput1" placeholder="First string...">
+        <input type="text" id="userInput2" placeholder="Second string...">
+        
+        <button id="insertBtn">Insert Combined Text</button>
         <div id="status">Waiting for Office...</div>
     </div>
 
     <script>
-    const statusDiv = document.getElementById("status");
-    const inputField = document.getElementById("userInput");
-    const inputField2 = document.getElementById("userInput2");
+        const statusDiv = document.getElementById("status");
+        const input1 = document.getElementById("userInput1");
+        const input2 = document.getElementById("userInput2");
 
-    Office.onReady(function (info) {
-        // Use info.host (the parameter) instead of Office.Host.Outlook
-        // info.host is a string like "Outlook", "Word", etc.
-        if (info.host === "Outlook" || (Office.context && Office.context.mailbox)) {
-            
-            updateStatus("Outlook connection: READY", "success");
-            
-            // Attach the click event
-            document.getElementById("insertBtn").onclick = insertText;
-        } else {
-            updateStatus("Error: This add-in must run in Outlook.", "error");
-        }
-    });
-
-    function updateStatus(msg, className) {
-        statusDiv.innerText = msg;
-        statusDiv.className = className;
-    }
-
-    function insertText() {
-        const userString = inputField.value.trim();
-        const userString2 = inputField2.value.trim();
-        if (!userString) return;
-
-        const finalString = "Dear "+userInput+",\n\nUnfortunately, I will not be able to make it to our scheduled meeting due to this reason: " + userString2 + ".\n\nblah";
-
-        // Check if we are in a compose window
-        if (!Office.context.mailbox.item || !Office.context.mailbox.item.body) {
-            updateStatus("Error: Please open a 'New Email' or 'Reply'.", "error");
-            return;
-        }
-
-        Office.context.mailbox.item.body.setSelectedDataAsync(
-            finalString,
-            { coercionType: Office.CoercionType.Text },
-            function (asyncResult) {
-                if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-                    updateStatus("Failed: " + asyncResult.error.message, "error");
-                } else {
-                    updateStatus("Inserted successfully!", "success");
-                    inputField.value = ""; 
-                    inputField2.value = "";
-                }
+        Office.onReady(function (info) {
+            // Using the robust check we discussed
+            if (info.host === "Outlook" || (Office.context && Office.context.mailbox)) {
+                updateStatus("Outlook connection: READY", "success");
+                document.getElementById("insertBtn").onclick = insertCombinedText;
+            } else {
+                updateStatus("Error: Not running inside Outlook.", "error");
             }
-        );
-    }
-</script>
+        });
+
+        function updateStatus(msg, className) {
+            statusDiv.innerText = msg;
+            statusDiv.className = className;
+        }
+
+        function insertCombinedText() {
+            const val1 = input1.value.trim();
+            const val2 = input2.value.trim();
+
+            // Logic to combine them - you can change the " - " to a space or newline
+            const finalString = "Dear "+val1+",\n\nUnfortunately, I will not be able to make it to our scheduled meeting due to this reason: " + val2 + ".\n\nblah";
+
+            // Ensure we have something to paste
+            if (!val1 && !val2) {
+                updateStatus("Please fill in at least one box.", "error");
+                return;
+            }
+
+            // Using the Office API to write to the email body
+            Office.context.mailbox.item.body.setSelectedDataAsync(
+                finalString,
+                { coercionType: Office.CoercionType.Text },
+                function (asyncResult) {
+                    if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+                        updateStatus("Insert failed: " + asyncResult.error.message, "error");
+                    } else {
+                        updateStatus("Success!", "success");
+                        // Optional: Clear both inputs
+                        input1.value = "";
+                        input2.value = "";
+                    }
+                }
+            );
+        }
+    </script>
 </body>
 </html>
