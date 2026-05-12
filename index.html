@@ -32,11 +32,12 @@
         const inputField = document.getElementById("userInput");
 
         Office.onReady(function (info) {
-            if (info.host === Office.Host.Outlook) {
+            if (info && info.host === Office.Host.Outlook) {
                 updateStatus("Outlook connection: READY", "success");
                 document.getElementById("insertBtn").onclick = insertText;
             } else {
-                updateStatus("Error: Not running inside Outlook.", "error");
+                updateStatus("Host detected: " + (info ? info.host : "Unknown"), "error");
+                console.log("Detailed Info:", info);
             }
         });
 
