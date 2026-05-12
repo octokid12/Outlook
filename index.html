@@ -10,11 +10,18 @@
         body { font-family: 'Segoe UI', Tahoma, sans-serif; padding: 15px; background-color: #f4f4f4; }
         .container { display: flex; flex-direction: column; gap: 10px; }
         input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        
+        /* Button Styles */
         button { 
-            width: 100%; padding: 10px; background: #0078d4; color: white; 
+            width: 100%; padding: 10px; color: white; 
             border: none; border-radius: 4px; cursor: pointer; font-weight: bold;
         }
-        button:hover { background: #005a9e; }
+        .btn-blue { background: #0078d4; }
+        .btn-blue:hover { background: #005a9e; }
+        
+        .btn-red { background: #d83b01; }
+        .btn-red:hover { background: #a42c00; }
+
         #status { font-size: 12px; margin-top: 10px; padding: 5px; border-radius: 2px; }
         .error { color: #a4262c; background: #fed9cc; }
         .success { color: #107c10; background: #dff6dd; }
@@ -22,10 +29,12 @@
 </head>
 <body>
     <div class="container">
-        <input type="text" id="userInput1" placeholder="First string...">
-        <input type="text" id="userInput2" placeholder="Second string...">
+        <input type="text" id="userInput1" placeholder="Recipient...">
+        <input type="text" id="userInput2" placeholder="Reason for cancellation...">
         
-        <button id="insertBtn">Insert Combined Text</button>
+        <button id="helloBtn" class="btn-blue">Reschedule Meeting</button>
+        <button id="goodbyeBtn" class="btn-red">Cancel Meeting</button>
+        
         <div id="status">Waiting for Office...</div>
     </div>
 
@@ -35,10 +44,13 @@
         const input2 = document.getElementById("userInput2");
 
         Office.onReady(function (info) {
-            // Using the robust check we discussed
             if (info.host === "Outlook" || (Office.context && Office.context.mailbox)) {
                 updateStatus("Outlook connection: READY", "success");
-                document.getElementById("insertBtn").onclick = insertCombinedText;
+                
+                // Attach different functions to different buttons
+                ///1st rescheduled 2nd cancelled
+                document.getElementById("helloBtn").onclick = () => insertText("\n\nI may be available at a later time today, please let me know if you are available also.");
+                document.getElementById("goodbyeBtn").onclick = () => insertText("\n\nUnfortunately, I cannot reschedule the meeting for today. Please let me know another time you are available.");
             } else {
                 updateStatus("Error: Not running inside Outlook.", "error");
             }
@@ -49,20 +61,18 @@
             statusDiv.className = className;
         }
 
-        function insertCombinedText() {
+        // We use one function that accepts a "suffix" to keep the code clean
+        function insertText(suffix) {
             const val1 = input1.value.trim();
             const val2 = input2.value.trim();
 
-            // Logic to combine them - you can change the " - " to a space or newline
-            const finalString = "Dear "+val1+",\n\nUnfortunately, I will not be able to make it to our scheduled meeting due to this reason: " + val2 + ".\n\nblah";
-
-            // Ensure we have something to paste
             if (!val1 && !val2) {
                 updateStatus("Please fill in at least one box.", "error");
                 return;
             }
 
-            // Using the Office API to write to the email body
+            const finalString = "Dear "+val1+",\n\nUnfortunately, I will not be able to make it to our scheduled meeting due to this reason: " + val2 + "."+suffix+"\n\nBest regards,\nMs. D";
+
             Office.context.mailbox.item.body.setSelectedDataAsync(
                 finalString,
                 { coercionType: Office.CoercionType.Text },
@@ -71,7 +81,6 @@
                         updateStatus("Insert failed: " + asyncResult.error.message, "error");
                     } else {
                         updateStatus("Success!", "success");
-                        // Optional: Clear both inputs
                         input1.value = "";
                         input2.value = "";
                     }
