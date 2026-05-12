@@ -28,49 +28,53 @@
     </div>
 
     <script>
-        const statusDiv = document.getElementById("status");
-        const inputField = document.getElementById("userInput");
+    const statusDiv = document.getElementById("status");
+    const inputField = document.getElementById("userInput");
 
-        Office.onReady(function (info) {
-            if (info && info.host === Office.Host.Outlook) {
-                updateStatus("Outlook connection: READY", "success");
-                document.getElementById("insertBtn").onclick = insertText;
-            } else {
-                updateStatus("Host detected: " + (info ? info.host : "Unknown"), "error");
-                console.log("Detailed Info:", info);
-            }
-        });
-
-        function updateStatus(msg, className) {
-            statusDiv.innerText = msg;
-            statusDiv.className = className;
-        }
-
-        function insertText() {
-            const userString = inputField.value.trim();
+    Office.onReady(function (info) {
+        // Use info.host (the parameter) instead of Office.Host.Outlook
+        // info.host is a string like "Outlook", "Word", etc.
+        if (info.host === "Outlook" || (Office.context && Office.context.mailbox)) {
             
-            if (!userString) {
-                updateStatus("Please enter some text first.", "error");
-                return;
-            }
-
-            const finalString = userString + " Hello World!";
-
-            // Use HTML coercion if you want to preserve formatting, 
-            // or Text for plain string insertion.
-            Office.context.mailbox.item.body.setSelectedDataAsync(
-                finalString,
-                { coercionType: Office.CoercionType.Text },
-                function (asyncResult) {
-                    if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-                        updateStatus("Failed: " + asyncResult.error.message, "error");
-                    } else {
-                        updateStatus("Inserted successfully!", "success");
-                        inputField.value = ""; // Clear input
-                    }
-                }
-            );
+            updateStatus("Outlook connection: READY", "success");
+            
+            // Attach the click event
+            document.getElementById("insertBtn").onclick = insertText;
+        } else {
+            updateStatus("Error: This add-in must run in Outlook.", "error");
         }
-    </script>
+    });
+
+    function updateStatus(msg, className) {
+        statusDiv.innerText = msg;
+        statusDiv.className = className;
+    }
+
+    function insertText() {
+        const userString = inputField.value.trim();
+        if (!userString) return;
+
+        const finalString = userString + " Hello World!";
+
+        // Check if we are in a compose window
+        if (!Office.context.mailbox.item || !Office.context.mailbox.item.body) {
+            updateStatus("Error: Please open a 'New Email' or 'Reply'.", "error");
+            return;
+        }
+
+        Office.context.mailbox.item.body.setSelectedDataAsync(
+            finalString,
+            { coercionType: Office.CoercionType.Text },
+            function (asyncResult) {
+                if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+                    updateStatus("Failed: " + asyncResult.error.message, "error");
+                } else {
+                    updateStatus("Inserted successfully!", "success");
+                    inputField.value = ""; 
+                }
+            }
+        );
+    }
+</script>
 </body>
 </html>
