@@ -29,7 +29,7 @@
 </head>
 <body>
     <div class="container">
-        <input type="text" id="userInput1" placeholder="Recipient">
+        <input type="text" id="userInput1" placeholder="Recipient...">
         <input type="text" id="userInput2" placeholder="Reason for cancellation">
         
         <button id="helloBtn" class="btn-blue">Reschedule Meeting</button>
@@ -71,7 +71,7 @@
                 return;
             }
 
-            const finalString = "Dear "+val1+",\n\n\nUnfortunately, I will not be able to make it to our scheduled meeting due to this reason: " + val2 + "."+suffix+"\n\n\nBest regards,\n\nMs. D";
+            const finalString = "Dear "+val1+",\n\n\n\nUnfortunately, I will not be able to make it to our scheduled meeting due to this reason: " + val2 + "."+suffix+"\n\n\n\nBest regards,\n\n\nMs. D";
 
             Office.context.mailbox.item.body.setSelectedDataAsync(
                 finalString,
