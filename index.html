@@ -22,7 +22,7 @@
 </head>
 <body>
     <div class="container">
-        <input type="text" id="userInput" placeholder="Type your string here...">
+        <input type="text" id="userInput" placeholder="Reason for cancellation...">
         <button id="insertBtn">Insert Text</button>
         <div id="status">Waiting for Office...</div>
     </div>
@@ -54,7 +54,7 @@
         const userString = inputField.value.trim();
         if (!userString) return;
 
-        const finalString = userString + " Hello World!";
+        const finalString = "Dear Recipient,\n\nUnfortunately, I will not be able to make it to our scheduled meeting due to this reason: " + userString + ".\nblah";
 
         // Check if we are in a compose window
         if (!Office.context.mailbox.item || !Office.context.mailbox.item.body) {
