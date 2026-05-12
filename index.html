@@ -23,7 +23,6 @@
 <body>
     <div class="container">
         <input type="text" id="userInput" placeholder="Recipient's name...">
-        <button id="insertBtn">Insert Text</button>
         <div id="status">Waiting for Office...</div>
     </div>
     <div class="container">
@@ -36,6 +35,8 @@
     const statusDiv = document.getElementById("status");
     const inputField = document.getElementById("userInput");
     const inputField2 = document.getElementById("userInput2");
+    updateStatus(inputField);
+    updateStatus(inputField2);
 
     Office.onReady(function (info) {
         // Use info.host (the parameter) instead of Office.Host.Outlook
