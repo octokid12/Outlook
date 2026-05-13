@@ -49,8 +49,8 @@
                 
                 // Attach different functions to different buttons
                 ///1st rescheduled 2nd cancelled
-                document.getElementById("helloBtn").onclick = () => insertText("I may be available at a later time today, please let me know if you are available also.");
-                document.getElementById("goodbyeBtn").onclick = () => insertText("Unfortunately, I cannot reschedule the meeting for today. Please let me know another time you are available.");
+                document.getElementById("helloBtn").onclick = () => insertText("Additionally, I may be available at a later time today, please let me know if you are available also.");
+                document.getElementById("goodbyeBtn").onclick = () => insertText("Additionally, I cannot reschedule the meeting for today. Please let me know another time you are available.");
             } else {
                 updateStatus("Error: Not running inside Outlook.", "error");
             }
